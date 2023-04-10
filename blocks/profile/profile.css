@@ -1,0 +1,9 @@
+.profile {
+  padding: 40px 0 50px;
+  color: white;
+  display: grid;
+  grid-template-columns: repeat(2, min-content) auto;
+  column-gap: 30px;
+  grid-template-rows: auto;
+  align-items: center;
+}
