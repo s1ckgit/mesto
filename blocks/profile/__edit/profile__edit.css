@@ -1,6 +1,9 @@
 .profile__edit {
   cursor: pointer;
   transition: opacity .3s;
+  width: 24px;
+  height: 24px;
+  background-image: url('../../../images/EditButton.svg');
 }
 
 .profile__edit:hover {
