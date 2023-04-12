@@ -5,3 +5,21 @@
   grid-auto-rows: auto;
   gap: 20px;
 }
+
+@media screen and (max-width: 768px) {
+  .elements {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .elements {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 468px) {
+  .elements {
+    padding: 0 19px;
+  }
+}

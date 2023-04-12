@@ -6,3 +6,16 @@
   column-gap: 18px;
   row-gap: 10px;
 }
+
+@media screen and (max-width: 768px) {
+  .profile__info {
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  .profile__info {
+    column-gap: 10px;
+    row-gap: 14px;
+  }
+}
