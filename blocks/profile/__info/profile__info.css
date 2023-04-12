@@ -17,5 +17,7 @@
   .profile__info {
     column-gap: 10px;
     row-gap: 14px;
+    margin-top: 12px;
+    margin-bottom: 22px;
   }
 }

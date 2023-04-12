@@ -26,6 +26,8 @@
   .profile__about {
     max-width: calc(100vw - 38px);
     grid-column: 1 / -1;
+    font-size: 14px;
+    line-height: 17px;
   }
 }
 

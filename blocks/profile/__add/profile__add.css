@@ -8,6 +8,7 @@
   cursor: pointer;
   position: relative;
   box-sizing: border-box;
+  background-color: transparent;
 }
 
 .profile__add::after {
