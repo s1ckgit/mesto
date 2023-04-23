@@ -25,77 +25,52 @@
         <button type="button" class="profile__add"></button>
       </section>
 
-      <section class="elements">
-
-        <div class="element">
-          <img src="./images/elements/karachevsk.jpg" alt="Карачевск" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Карачевск</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-        <div class="element">
-          <img src="./images/elements/Elbrus.jpg" alt="Гора Эльбрус" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Гора Эльбрус</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-        <div class="element">
-          <img src="./images/elements/Dombai.jpg" alt="Домбай" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Домбай</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-        <div class="element">
-          <img src="./images/elements/Elbrus.jpg" alt="Гора Эльбрус" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Гора Эльбрус</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-        <div class="element">
-          <img src="./images/elements/Dombai.jpg" alt="Домбай" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Домбай</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-        <div class="element">
-          <img src="./images/elements/karachevsk.jpg" alt="Карачаево-Черкесия" class="element__img">
-          <div class="element__block">
-            <h3 class="element__name">Карачаево-Черкесия</h3>
-            <button type="button" class="element__like"></button>
-          </div>
-        </div>
-
-      </section>
+      <section class="elements"></section>
     </main>
 
     <footer class="footer">
       <p class="footer__copyright">© 2023 Mesto Russia</p>
     </footer>
 
+  </div>
+
+  <template id="popup-template">
     <div class="popup">
       <div class="popup__container">
         <button type="button" class="popup__close"></button>
-        <h2 class="popup__title">Редактировать профиль</h2>
+        <h2 class="popup__title"></h2>
 
         <form name="popupForm" class="popup__form">
-          <input required name="name" id="name" type="text" placeholder="Имя" class="popup__input">
-          <input required name="about" id="about" type="text" placeholder="О себе" class="popup__input">
-          <button type="submit" class="popup__button">Сохранить</button>
+          <input required name="" id="" type="text" placeholder="" class="popup__input">
+          <input required name="" id="" type="text" placeholder="" class="popup__input">
+          <button type="submit" class="popup__button"></button>
         </form>
       </div>
     </div>
+  </template>
 
-  </div>
+  <template id="element-template">
+    <div class="element">
+      <button type="button" class="element__delete"></button>
+      <img src="" alt="" class="element__img">
+      <div class="element__block">
+        <h3 class="element__name"></h3>
+        <button type="button" class="element__like"></button>
+      </div>
+    </div>
+  </template>
+
+  <template id="image-popup-template">
+    <div class="image-popup">
+      <div class="image-popup__container">
+        <button type="button" class="popup__close"></button>
+        <img src="./images/elements/Elbrus.jpg" alt="" class="image-popup__img">
+        <p class="image-popup__title">Эльюрус</p>
+      </div>
+    </div>
+  </template>
+
   <script src="./js/index.js"></script>
 </body>
 </html>
+
