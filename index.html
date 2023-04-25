@@ -32,22 +32,41 @@
       <p class="footer__copyright">© 2023 Mesto Russia</p>
     </footer>
 
-  </div>
+    <div class="popup popup_profile">
+      <div class="popup__container popup__container_profile">
+        <button type="button" class="popup__close popup__close_profile"></button>
+        <h2 class="popup__title popup__title_profile">Редактировать профиль</h2>
 
-  <template id="popup-template">
-    <div class="popup">
-      <div class="popup__container">
-        <button type="button" class="popup__close"></button>
-        <h2 class="popup__title"></h2>
-
-        <form name="popupForm" class="popup__form">
-          <input required name="" id="" type="text" placeholder="" class="popup__input">
-          <input required name="" id="" type="text" placeholder="" class="popup__input">
-          <button type="submit" class="popup__button"></button>
+        <form name="popupFormProfile" class="popup__form popup__form_profile">
+          <input required name="name" id="name" type="text" placeholder="Имя" class="popup__input popup__input_profile">
+          <input required name="about" id="about" type="text" placeholder="О себе" class="popup__input popup__input_profile">
+          <button type="submit" class="popup__button popup__button_profile">Сохранить</button>
         </form>
       </div>
     </div>
-  </template>
+
+    <div class="popup popup_card">
+      <div class="popup__container popup__container_card">
+        <button type="button" class="popup__close popup__close_card"></button>
+        <h2 class="popup__title popup__title_card">Новое место</h2>
+
+        <form name="popupFormCard" class="popup__form popup__form_card">
+          <input required name="title" id="title" type="text" placeholder="Название" class="popup__input popup__input_card">
+          <input required name="link" id="link" type="text" placeholder="Ссылка на картинку" class="popup__input popup__input_card">
+          <button type="submit" class="popup__button popup__button_card">Создать</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="popup popup_image">
+      <div class="popup__container popup__container_image">
+        <button type="button" class="popup__close popup__close_image"></button>
+        <img src="./images/elements/Elbrus.jpg" alt="" class="popup__img">
+        <p class="popup__title popup__title_image">Эльбрус</p>
+      </div>
+    </div>
+
+  </div>
 
   <template id="element-template">
     <div class="element">
@@ -56,16 +75,6 @@
       <div class="element__block">
         <h3 class="element__name"></h3>
         <button type="button" class="element__like"></button>
-      </div>
-    </div>
-  </template>
-
-  <template id="image-popup-template">
-    <div class="image-popup">
-      <div class="image-popup__container">
-        <button type="button" class="popup__close"></button>
-        <img src="./images/elements/Elbrus.jpg" alt="" class="image-popup__img">
-        <p class="image-popup__title">Эльюрус</p>
       </div>
     </div>
   </template>

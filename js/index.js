@@ -2,103 +2,51 @@
 
 const editButton = document.querySelector('.profile__edit'),
   addButton = document.querySelector('.profile__add'),
+  closeButtons = document.querySelectorAll('.popup__close'),
+  likeButton = document.querySelector('.element__like'),
+  profilePopup = document.querySelector('.popup_profile'),
+  cardPopup = document.querySelector('.popup_card'),
+  imagePopup = document.querySelector('.popup_image'),
   profileName = document.querySelector('.profile__name'),
   profileAbout = document.querySelector('.profile__about'),
-  popupTemplate = document.getElementById('popup-template').content;
+  nameInput = document.querySelector('#name'),
+  aboutInput = document.querySelector('#about'),
+  titleInput = document.querySelector('#title'),
+  linkInput = document.querySelector('#link')
 
 addButton.addEventListener('click', () => {
-  renderPopup('card')
+  cardPopup.classList.add('popup_opened')
 })
 
 editButton.addEventListener('click', () => {
-  renderPopup('profile')
+  profilePopup.classList.add('popup_opened')
+
+  nameInput.value = profileName.textContent
+  aboutInput.value = profileAbout.textContent
 })
 
-function renderPopup(type) {
-  const popupElement = popupTemplate.querySelector('.popup').cloneNode(true),
-    popupElementTitle = popupElement.querySelector('.popup__title'),
-    popupElementInputs = popupElement.querySelectorAll('.popup__input'),
-    popupElementButton = popupElement.querySelector('.popup__button')
+profilePopup.addEventListener('submit', (event) => {
+  event.preventDefault()
+  profileName.textContent = nameInput.value
+  profileAbout.textContent = aboutInput.value
+  profilePopup.classList.remove('popup_opened')
+})
 
-    switch (type) {
-      case 'profile':
-        popupElement.dataset.action = 'profileEdit'
-        popupElementTitle.textContent = 'Редактировать профиль'
-        popupElementInputs[0].setAttribute('name', 'name')
-        popupElementInputs[0].setAttribute('id', 'name')
-        popupElementInputs[0].setAttribute('placeholder', 'Имя')
-        popupElementInputs[1].setAttribute('name', 'about')
-        popupElementInputs[1].setAttribute('id', 'about')
-        popupElementInputs[1].setAttribute('placeholder', 'О себе')
-        popupElementButton.textContent = 'Сохранить'
+cardPopup.addEventListener('submit', (event) => {
+  event.preventDefault()
+  addNewCard(titleInput.value, linkInput.value)
+  titleInput.value = ''
+  linkInput.value = ''
+  cardPopup.classList.remove('popup_opened')
+})
 
-        const nameInput = popupElement.querySelector('#name'),
-          aboutInput = popupElement.querySelector('#about')
+closeButtons.forEach((item) => {
+  item.addEventListener('click', (event) => {
+    const target = event.target
 
-        nameInput.value = profileName.textContent
-        aboutInput.value = profileAbout.textContent
-        break
-
-      case 'card':
-        popupElement.dataset.action = 'cardAdd'
-        popupElementTitle.textContent = 'Новое место'
-        popupElementInputs[0].setAttribute('name', 'title')
-        popupElementInputs[0].setAttribute('id', 'title')
-        popupElementInputs[0].setAttribute('placeholder', 'Название')
-        popupElementInputs[1].setAttribute('name', 'link')
-        popupElementInputs[1].setAttribute('id', 'link')
-        popupElementInputs[1].setAttribute('placeholder', 'Ссылка на картинку')
-        popupElementButton.textContent = 'Создать'
-        break
-    }
-
-    document.querySelector('.footer').after(popupElement)
-
-    addFormListeners()
-
-    setTimeout(() => {popupElement.classList.add('popup_opened')})
-
-}
-
-function addFormListeners() {
-  const popup = document.querySelector('.popup'),
-    closeButton = document.querySelector('.popup__close'),
-    popupForm = document.querySelector('.popup__form');
-
-  closeButton.addEventListener('click', () => {
-      closePopup()
+    target.closest('.popup').classList.remove('popup_opened')
   })
-
-  popupForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-
-    switch (popup.dataset.action) {
-      case 'profileEdit':
-        const nameInput = popup.querySelector('#name'),
-          aboutInput = popup.querySelector('#about')
-
-        profileName.textContent = nameInput.value;
-        profileAbout.textContent = aboutInput.value;
-        break
-
-      case 'cardAdd':
-        const popupInputTitle = document.querySelector('.popup__input[name="title"]'),
-          popupInputLink = document.querySelector('.popup__input[name="link"]')
-
-        addNewCard(popupInputTitle.value, popupInputLink.value)
-        break
-    }
-    closePopup()
-  })
-}
-
-function closePopup(type = '') {
-  const popup = document.querySelector(`.${type}popup`)
-  popup.classList.remove(`${type}popup_opened`)
-  setTimeout(() => {
-    popup.remove()
-  }, 300)
-}
+})
 
 // Cards
 
@@ -164,10 +112,8 @@ function addNewCard(title, link) {
 
 // Likes
 
-const likeButton = document.querySelector('.element__like')
-
 document.addEventListener('click', (event) => {
-  let target = event.target
+  const target = event.target
   if (event.target.matches('.element__like')) {
     target.classList.toggle('element__like_active')
   }
@@ -176,36 +122,28 @@ document.addEventListener('click', (event) => {
 // Delete
 
 document.addEventListener('click', (event) => {
-  let target = event.target
+  const target = event.target
   if (event.target.matches('.element__delete')) {
     target.parentNode.remove()
   }
 })
 
-// Image-popup
-
-function renderImagePopup(image) {
-  const imagePopupTemplate = document.getElementById('image-popup-template').content,
-    imagePopupElement = imagePopupTemplate.querySelector('.image-popup').cloneNode(true),
-    imagePopupImage = imagePopupElement.querySelector('.image-popup__img'),
-    imagePopupTitle = imagePopupElement.querySelector('.image-popup__title')
-
-  imagePopupImage.src = image.src
-  imagePopupImage.alt = image.alt
-  imagePopupTitle.textContent = image.alt
-
-  document.querySelector('.footer').after(imagePopupElement)
-
-  setTimeout(() => {imagePopupElement.classList.add('image-popup_opened')})
-}
+// Image Popup
 
 document.addEventListener('click', (event) => {
-  let target = event.target
-  if (target.matches('.element__img')) {
-    renderImagePopup(target)
-    const closeButton = document.querySelector('.popup__close')
-    closeButton.addEventListener('click', () => {
-      closePopup('image-')
-    })
+  const target = event.target
+  if (event.target.matches('.element__img')) {
+    openImage(target.alt, target.src)
   }
+
 })
+
+function openImage(title, link) {
+  const popupImage = document.querySelector('.popup__img'),
+    popupTitle = document.querySelector('.popup__title_image')
+
+  popupImage.src = link
+  popupTitle.textContent = title
+
+  imagePopup.classList.add('popup_opened')
+}
