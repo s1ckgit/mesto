@@ -1,5 +1,5 @@
 function showError(formElement, inputElement, errorMessage, {inputErrorClass, errorClass}) {
-  const errorElement = formElement.querySelector(`.input-error__${inputElement.id}`)
+  const errorElement = formElement.querySelector(`.input-error_${inputElement.id}`)
   inputElement.classList.add(inputErrorClass);
   errorElement.textContent = errorMessage
   errorElement.classList.add(errorClass)
