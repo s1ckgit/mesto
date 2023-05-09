@@ -37,9 +37,16 @@
         <button type="button" class="popup__close popup__close_profile"></button>
         <h2 class="popup__title popup__title_profile">Редактировать профиль</h2>
 
-        <form name="popupFormProfile" class="popup__form popup__form_profile">
-          <input required name="name" id="name" type="text" placeholder="Имя" class="popup__input popup__input_profile">
-          <input required name="about" id="about" type="text" placeholder="О себе" class="popup__input popup__input_profile">
+        <form name="popupFormProfile" class="popup__form popup__form_profile" novalidate>
+          <fieldset class="popup__fieldset">
+            <input minlength="2" maxlength="40" required name="name" id="name" type="text" placeholder="Имя" class="popup__input popup__input_profile">
+            <span class="input-error input-error__name"></span>
+          </fieldset>
+
+          <fieldset class="popup__fieldset">
+            <input minlength="2" maxlength="200" required name="about" id="about" type="text" placeholder="О себе" class="popup__input popup__input_profile">
+            <span class="input-error input-error__about"></span>
+          </fieldset>
           <button type="submit" class="popup__button popup__button_profile">Сохранить</button>
         </form>
       </div>
@@ -50,9 +57,17 @@
         <button type="button" class="popup__close popup__close_card"></button>
         <h2 class="popup__title popup__title_card">Новое место</h2>
 
-        <form name="popupFormCard" class="popup__form popup__form_card">
-          <input required name="title" id="title" type="text" placeholder="Название" class="popup__input popup__input_card">
-          <input required name="link" id="link" type="text" placeholder="Ссылка на картинку" class="popup__input popup__input_card">
+        <form name="popupFormCard" class="popup__form popup__form_card" novalidate>
+          <fieldset class="popup__fieldset">
+            <input required minlength="2" maxlength="30" name="title" id="title" type="text" placeholder="Название" class="popup__input popup__input_card">
+            <span class="input-error input-error__title"></span>
+          </fieldset>
+
+
+          <fieldset class="popup__fieldset">
+            <input required name="link" id="link" type="url" placeholder="Ссылка на картинку" class="popup__input popup__input_card">
+            <span class="input-error input-error__link"></span>
+          </fieldset>
           <button type="submit" class="popup__button popup__button_card">Создать</button>
         </form>
       </div>
@@ -81,6 +96,7 @@
 
   <script src="./js/index.js"></script>
   <script src="./js/initialCards.js"></script>
+  <script src="./js/validate.js"></script>
 </body>
 </html>
 

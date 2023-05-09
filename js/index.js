@@ -1,6 +1,5 @@
 const editButton = document.querySelector('.profile__edit'),
   addButton = document.querySelector('.profile__add'),
-  closeButtons = document.querySelectorAll('.popup__close'),
   likeButton = document.querySelector('.element__like'),
   profilePopup = document.querySelector('.popup_profile'),
   cardPopup = document.querySelector('.popup_card'),
@@ -15,15 +14,17 @@ const editButton = document.querySelector('.profile__edit'),
   popupTitle = document.querySelector('.popup__title_image'),
   cardsContainer = document.querySelector('.elements')
 
+nameInput.value = profileName.textContent
+aboutInput.value = profileAbout.textContent
+
 addButton.addEventListener('click', () => {
   openPopup(cardPopup)
 })
 
 editButton.addEventListener('click', () => {
-  openPopup(profilePopup)
-
   nameInput.value = profileName.textContent
   aboutInput.value = profileAbout.textContent
+  openPopup(profilePopup)
 })
 
 profilePopup.addEventListener('submit', (event) => {
@@ -41,20 +42,14 @@ cardPopup.addEventListener('submit', (event) => {
   closePopup(cardPopup)
 })
 
-closeButtons.forEach((item) => {
-  item.addEventListener('click', (event) => {
-    const target = event.target
-    const currentPopup = target.closest('.popup')
-    closePopup(currentPopup)
-  })
-})
-
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened')
+  setPopupClosingListeners(popupElement)
 }
 
 function closePopup(popupElement) {
   popupElement.classList.remove('popup_opened')
+  removePopupClosingListeners(popupElement)
 }
 
 function createCard(title, link) {
@@ -91,4 +86,21 @@ function openImage(title, link) {
   popupTitle.textContent = title
 
   openPopup(imagePopup)
+}
+
+function setPopupClosingListeners(popupElement) {
+  popupElement.addEventListener('click', popupClosingButtons)
+  document.addEventListener('keydown', popupClosingButtons)
+}
+
+function removePopupClosingListeners(popupElement) {
+  popupElement.removeEventListener('click', popupClosingButtons)
+  document.removeEventListener('keydown', popupClosingButtons)
+}
+
+function popupClosingButtons(event) {
+  const popupElement = document.querySelector('.popup_opened')
+  if((event.key && event.key === 'Escape') || (event.target.matches('.popup') || event.target.matches('.popup__close'))) {
+    closePopup(popupElement)
+  }
 }
