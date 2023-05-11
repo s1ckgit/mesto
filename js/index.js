@@ -12,10 +12,16 @@ const editButton = document.querySelector('.profile__edit'),
   linkInput = document.querySelector('#link'),
   popupImage = document.querySelector('.popup__img'),
   popupTitle = document.querySelector('.popup__title_image'),
-  cardsContainer = document.querySelector('.elements')
+  cardsContainer = document.querySelector('.elements'),
+  profileSubmitButton = document.querySelector('.popup__button_profile')
 
-nameInput.value = profileName.textContent
-aboutInput.value = profileAbout.textContent
+// nameInput.value = profileName.textContent
+// aboutInput.value = profileAbout.textContent
+
+// Если убрать две строчки выше, то кнопка 'Сохранить' в редактировании профиля будет неактивной при первом открытии,
+// т.к при загрузке страницы инпуты будут пустые и функция toggleButtonState деактивирует эту кнопку.
+// Поэтому, я вызвал toggleButtonState при клике на кнопку открытия редактирования профиля
+// P.S Благодарю за отличное ревью
 
 addButton.addEventListener('click', () => {
   openPopup(cardPopup)
@@ -24,6 +30,7 @@ addButton.addEventListener('click', () => {
 editButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent
   aboutInput.value = profileAbout.textContent
+  toggleButtonState([nameInput, aboutInput], profileSubmitButton)
   openPopup(profilePopup)
 })
 
@@ -34,13 +41,7 @@ profilePopup.addEventListener('submit', (event) => {
   closePopup(profilePopup)
 })
 
-cardPopup.addEventListener('submit', (event) => {
-  event.preventDefault()
-  cardsContainer.prepend(createCard(titleInput.value, linkInput.value))
-  titleInput.value = ''
-  linkInput.value = ''
-  closePopup(cardPopup)
-})
+cardPopup.addEventListener('submit', handleCardPopupSubmit)
 
 function openPopup(popupElement) {
   popupElement.classList.add('popup_opened')
@@ -74,8 +75,7 @@ function createCard(title, link) {
     })
 
     deleteButton.addEventListener('click', (event) => {
-      const target = event.target
-      target.parentNode.remove()
+      cardElement.remove()
     })
 
     return cardElement
@@ -84,23 +84,37 @@ function createCard(title, link) {
 function openImage(title, link) {
   popupImage.src = link
   popupTitle.textContent = title
-
+  popupImage.alt = title
   openPopup(imagePopup)
 }
 
 function setPopupClosingListeners(popupElement) {
-  popupElement.addEventListener('click', popupClosingButtons)
-  document.addEventListener('keydown', popupClosingButtons)
+  popupElement.addEventListener('click', handlePopupClose)
+  document.addEventListener('keydown', handleEscape)
 }
 
 function removePopupClosingListeners(popupElement) {
-  popupElement.removeEventListener('click', popupClosingButtons)
-  document.removeEventListener('keydown', popupClosingButtons)
+  popupElement.removeEventListener('click', handlePopupClose)
+  document.removeEventListener('keydown', handleEscape)
 }
 
-function popupClosingButtons(event) {
-  const popupElement = document.querySelector('.popup_opened')
-  if((event.key && event.key === 'Escape') || (event.target.matches('.popup') || event.target.matches('.popup__close'))) {
-    closePopup(popupElement)
+function handlePopupClose(event) {
+  if(event.target.matches(".popup") || event.target.matches(".popup__close")) {
+    closePopup(event.currentTarget)
   }
+}
+
+function handleEscape(event) {
+  if(event.key && event.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened')
+    closePopup(openedPopup)
+  }
+}
+
+
+function handleCardPopupSubmit(event) {
+  event.preventDefault()
+  cardsContainer.prepend(createCard(titleInput.value, linkInput.value))
+  event.target.reset()
+  closePopup(cardPopup)
 }
