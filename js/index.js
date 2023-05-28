@@ -1,6 +1,8 @@
+import Card from "./Card.js"
+import FormValidator from "./FormValidator.js"
+
 const editButton = document.querySelector('.profile__edit'),
   addButton = document.querySelector('.profile__add'),
-  likeButton = document.querySelector('.element__like'),
   profilePopup = document.querySelector('.popup_profile'),
   cardPopup = document.querySelector('.popup_card'),
   imagePopup = document.querySelector('.popup_image'),
@@ -8,20 +10,12 @@ const editButton = document.querySelector('.profile__edit'),
   profileAbout = document.querySelector('.profile__about'),
   nameInput = document.querySelector('#name'),
   aboutInput = document.querySelector('#about'),
-  titleInput = document.querySelector('#title'),
-  linkInput = document.querySelector('#link'),
   popupImage = document.querySelector('.popup__img'),
   popupTitle = document.querySelector('.popup__title_image'),
-  cardsContainer = document.querySelector('.elements'),
-  profileSubmitButton = document.querySelector('.popup__button_profile')
+  cardsContainer = document.querySelector('.elements')
 
-// nameInput.value = profileName.textContent
-// aboutInput.value = profileAbout.textContent
-
-// Если убрать две строчки выше, то кнопка 'Сохранить' в редактировании профиля будет неактивной при первом открытии,
-// т.к при загрузке страницы инпуты будут пустые и функция toggleButtonState деактивирует эту кнопку.
-// Поэтому, я вызвал toggleButtonState при клике на кнопку открытия редактирования профиля
-// P.S Благодарю за отличное ревью
+nameInput.value = profileName.textContent
+aboutInput.value = profileAbout.textContent
 
 addButton.addEventListener('click', () => {
   openPopup(cardPopup)
@@ -30,7 +24,7 @@ addButton.addEventListener('click', () => {
 editButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent
   aboutInput.value = profileAbout.textContent
-  toggleButtonState([nameInput, aboutInput], profileSubmitButton)
+
   openPopup(profilePopup)
 })
 
@@ -51,41 +45,6 @@ function openPopup(popupElement) {
 function closePopup(popupElement) {
   popupElement.classList.remove('popup_opened')
   removePopupClosingListeners(popupElement)
-}
-
-function createCard(title, link) {
-  const cardTemplate = document.getElementById('element-template').content,
-    cardElement = cardTemplate.querySelector('.element').cloneNode(true),
-    cardImage = cardElement.querySelector('.element__img'),
-    cardName = cardElement.querySelector('.element__name'),
-    likeButton = cardElement.querySelector('.element__like'),
-    deleteButton = cardElement.querySelector('.element__delete')
-
-    cardImage.src = link
-    cardImage.alt = title
-    cardName.textContent = title
-
-    cardImage.addEventListener('click', () => {
-      openImage(cardName.textContent, cardImage.src)
-    })
-
-    likeButton.addEventListener('click', (event) => {
-      const target = event.target
-      target.classList.toggle('element__like_active')
-    })
-
-    deleteButton.addEventListener('click', (event) => {
-      cardElement.remove()
-    })
-
-    return cardElement
-}
-
-function openImage(title, link) {
-  popupImage.src = link
-  popupTitle.textContent = title
-  popupImage.alt = title
-  openPopup(imagePopup)
 }
 
 function setPopupClosingListeners(popupElement) {
@@ -111,10 +70,62 @@ function handleEscape(event) {
   }
 }
 
-
 function handleCardPopupSubmit(event) {
   event.preventDefault()
-  cardsContainer.prepend(createCard(titleInput.value, linkInput.value))
+  const inputData = {
+    name: cardPopup.querySelector('#title').value,
+    link: cardPopup.querySelector('#link').value
+  }
+  cardsContainer.prepend(new Card(inputData, '#element-template').generateCard())
   event.target.reset()
   closePopup(cardPopup)
 }
+
+const validationSettings = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_inactive',
+  inputErrorClass: 'popup__input_error',
+  errorClass: 'input-error_active'
+}
+
+const initialCards = [
+  {
+    name: 'Архыз',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+  },
+  {
+    name: 'Челябинская область',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+  },
+  {
+    name: 'Иваново',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+  },
+  {
+    name: 'Камчатка',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+  },
+  {
+    name: 'Холмогорский район',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+  },
+  {
+    name: 'Байкал',
+    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+  }
+];
+
+Array.from(document.querySelectorAll(validationSettings.formSelector)).forEach(form => {
+  new FormValidator(validationSettings, form).enableValidation()
+})
+
+initialCards.forEach(card => {
+  const cardObj = new Card(card, '#element-template')
+  const cardElement = cardObj.generateCard()
+
+  document.querySelector('.elements').append(cardElement)
+})
+
+export { popupImage, popupTitle, openPopup, imagePopup }
