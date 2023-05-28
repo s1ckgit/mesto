@@ -1,5 +1,6 @@
 import Card from "./Card.js"
 import FormValidator from "./FormValidator.js"
+import initialCards from "./initialCards.js"
 
 const editButton = document.querySelector('.profile__edit'),
   addButton = document.querySelector('.profile__add'),
@@ -10,8 +11,8 @@ const editButton = document.querySelector('.profile__edit'),
   profileAbout = document.querySelector('.profile__about'),
   nameInput = document.querySelector('#name'),
   aboutInput = document.querySelector('#about'),
-  popupImage = document.querySelector('.popup__img'),
-  popupTitle = document.querySelector('.popup__title_image'),
+  imagePopupImg = document.querySelector('.popup__img'),
+  imagepPopupTitle = document.querySelector('.popup__title_image'),
   cardsContainer = document.querySelector('.elements')
 
 nameInput.value = profileName.textContent
@@ -24,7 +25,7 @@ addButton.addEventListener('click', () => {
 editButton.addEventListener('click', () => {
   nameInput.value = profileName.textContent
   aboutInput.value = profileAbout.textContent
-
+  validators[0].clearValidationErrors()
   openPopup(profilePopup)
 })
 
@@ -90,42 +91,21 @@ const validationSettings = {
   errorClass: 'input-error_active'
 }
 
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-  }
-];
+const validators = []
 
 Array.from(document.querySelectorAll(validationSettings.formSelector)).forEach(form => {
-  new FormValidator(validationSettings, form).enableValidation()
+  const formValidator = new FormValidator(validationSettings, form)
+  formValidator.enableValidation()
+  validators.push(formValidator)
 })
+
+
 
 initialCards.forEach(card => {
   const cardObj = new Card(card, '#element-template')
   const cardElement = cardObj.generateCard()
 
-  document.querySelector('.elements').append(cardElement)
+  cardsContainer.append(cardElement)
 })
 
-export { popupImage, popupTitle, openPopup, imagePopup }
+export { imagePopupImg, imagepPopupTitle, openPopup, imagePopup }

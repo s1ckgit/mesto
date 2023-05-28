@@ -1,4 +1,4 @@
-import { popupImage, popupTitle, openPopup, imagePopup } from "./index.js";
+import { imagePopupImg, imagepPopupTitle, openPopup, imagePopup } from "./index.js";
 
 export default class Card {
   constructor(data, templateSelector) {
@@ -36,9 +36,9 @@ export default class Card {
   }
 
   _handleOpenImage() {
-    popupImage.src = this._image
-    popupTitle.textContent = this._title
-    popupImage.alt = this._title
+    imagePopupImg.src = this._image
+    imagepPopupTitle.textContent = this._title
+    imagePopupImg.alt = this._title
     openPopup(imagePopup)
   }
 
