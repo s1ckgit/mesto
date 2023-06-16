@@ -1,7 +1,6 @@
-import { imagePopupImg, imagepPopupTitle, openPopup, imagePopup } from "./index.js";
-
 export default class Card {
-  constructor(data, templateSelector) {
+  constructor(data, templateSelector, handleCardClick) {
+    this._handleCardClick = handleCardClick
     this._title = data.name
     this._image = data.link
     this._templateSelector = templateSelector
@@ -23,7 +22,7 @@ export default class Card {
     })
 
     this._element.querySelector('.element__img').addEventListener('click', () => {
-      this._handleOpenImage()
+      this._handleCardClick()
     })
   }
 
@@ -35,12 +34,12 @@ export default class Card {
     this._element.remove()
   }
 
-  _handleOpenImage() {
-    imagePopupImg.src = this._image
-    imagepPopupTitle.textContent = this._title
-    imagePopupImg.alt = this._title
-    openPopup(imagePopup)
-  }
+  // _handleOpenImage() {
+  //   imagePopupImg.src = this._image
+  //   imagepPopupTitle.textContent = this._title
+  //   imagePopupImg.alt = this._title
+  //   openPopup(imagePopup)
+  // }
 
   generateCard() {
     this._element = this._getCardTemplate()
