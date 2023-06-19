@@ -7,6 +7,6 @@ const validationSettings = {
   errorClass: 'input-error_active'
 }
 
-const validators = []
+const validators = {}
 
 export { validationSettings, validators }

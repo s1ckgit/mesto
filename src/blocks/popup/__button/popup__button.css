@@ -12,6 +12,6 @@
   transition: opacity .3s;
 }
 
-.popup__button:hover {
+.popup__button:not(.popup__button_inactive):hover {
   opacity: .8;
 }

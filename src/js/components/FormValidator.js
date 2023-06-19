@@ -15,7 +15,6 @@ export default class FormValidator {
     this._inputList.forEach(input => {
       this._clearInputError(input)
     })
-    this._enableButton(this._buttonElement)
   }
 
   _clearInputError(inputElement) {
