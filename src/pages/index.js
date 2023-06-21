@@ -9,15 +9,14 @@ import PopupWithForm from '../js/components/PopupWithForm.js'
 import { editButton, addButton, profilePopupNameInput, profilePopupAboutInput } from '../js/utils/constants.js'
 import { validationSettings, validators } from '../js/utils/validationSettings.js'
 import UserInfo from '../js/components/UserInfo.js'
+import { createCardElement } from '../js/utils/utils.js'
 
 // Контейнер карточек
 
 const cardsContainer = new Section({
   items: initialCards,
   renderer: (item) => {
-    return new Card(item, '#element-template', () => {
-      popupWithImage.open({link: item.link, name: item.name})
-    }).generateCard()
+    return createCardElement(item)
   }
 }, '.elements')
 cardsContainer.renderAll()
@@ -36,9 +35,7 @@ const popupWithImage = new PopupWithImage('.popup_image'),
       }),
       cardPopup = new PopupWithForm('.popup_card', (e) => {
         e.preventDefault()
-        cardsContainer.addItem(new Card(cardPopup.returnInputValues(), '#element-template', () => {
-          popupWithImage.open({link: cardPopup.inputsValue.link, name: cardPopup.inputsValue.name})
-        }).generateCard())
+        cardsContainer.addItem(createCardElement(cardPopup.returnInputValues()))
         cardPopup.close()
       })
 
@@ -61,7 +58,7 @@ editButton.addEventListener('click', () => {
   const {name, about} = userInfo.getUserInfo()
   profilePopupNameInput.value = name
   profilePopupAboutInput.value = about
-  validators['popupFormProfile']._toggleButtonState()
+  validators['popupFormProfile'].toggleButtonState()
   validators['popupFormProfile'].clearValidationErrors()
 })
 
@@ -69,5 +66,7 @@ addButton.addEventListener('click', () => {
   cardPopup.open()
   validators['popupFormCard'].clearValidationErrors()
 })
+
+export { popupWithImage }
 
 

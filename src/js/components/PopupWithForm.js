@@ -4,6 +4,7 @@ export default class PopupWithForm extends Popup {
   constructor(popupSelector, submitCallback) {
     super(popupSelector)
     this._submitCallback = submitCallback
+    this._form = this._popup.querySelector('.popup__form')
     this.inputsValue = {}
   }
 
@@ -25,6 +26,6 @@ export default class PopupWithForm extends Popup {
 
   close() {
     super.close()
-    this._popup.querySelector('form').reset()
+    this._form.reset()
   }
 }
