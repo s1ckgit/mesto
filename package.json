@@ -4,7 +4,7 @@
   "description": "* HTML\r * CSS \r * JavaScript",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack serve",
+    "dev": "webpack serve --open",
     "build": "webpack --mode=production",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
