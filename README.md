@@ -1,5 +1,7 @@
 # Проект: Место
 
+![Превью](https://github.com/s1ckgit/mesto//raw/main/preview.gif)
+
 ## Технологии применённые в проекте:
 * HTML
 * CSS
