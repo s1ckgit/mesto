@@ -1,6 +1,6 @@
 import { popupWithImage } from "../../pages";
 import Card from "../components/Card";
-import DeletePopup from "../components/DeletePopup";
+import { deletePopup } from "../../pages";
 
 export function createCardElement(data, api, user) {
   return new Card({
@@ -12,9 +12,8 @@ export function createCardElement(data, api, user) {
     removeApi: api.deleteCard,
     likeApi: api.likeCard,
     currentUser: user,
-    handleDelete: ({elementToDelete, id, removeApi}) => {
-      new DeletePopup({elementToDelete: elementToDelete, id: id, removeApi: removeApi, popupSelector: '.popup_delete'})
-          .setEventListeners()
+    handleDelete: ({elementToDelete, id}) => {
+        deletePopup.open({elementToDelete: elementToDelete, id: id})
     }
     }).generateCard()
 }

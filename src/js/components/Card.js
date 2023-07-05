@@ -5,7 +5,7 @@ export default class Card {
     this._image = data.link
     this._id = data._id
     this._likes = data.likes
-    this._removeApi = removeApi
+    // this._removeApi = removeApi
     this._likeApi = likeApi
     this._handleDelete = handleDelete
     this._owner = data.owner._id
@@ -37,11 +37,12 @@ export default class Card {
   }
 
   _handleLikeButton(e) {
-    e.target.classList.toggle('element__like_active')
     if(!this._isLiked) {
       this._likeApi(this._id)
         .then(data => {
           this._likeCounterElement.textContent = data.likes.length
+          this._isLiked = true
+          e.target.classList.toggle('element__like_active')
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
@@ -50,7 +51,9 @@ export default class Card {
     } else {
       this._likeApi(this._id, false)
         .then(data => {
+          this._isLiked = false
           this._likeCounterElement.textContent = data.likes.length
+          e.target.classList.toggle('element__like_active')
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
@@ -61,7 +64,7 @@ export default class Card {
   }
 
   _handleDeleteButton() {
-    this._handleDelete({elementToDelete: this._element, id: this._id, removeApi: this._removeApi})
+    this._handleDelete({elementToDelete: this._element, id: this._id})
   }
 
   generateCard() {

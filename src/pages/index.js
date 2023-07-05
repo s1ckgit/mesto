@@ -5,12 +5,13 @@ import Section from '../js/components/Section.js'
 import PopupWithImage from '../js/components/PopupWIthImage.js'
 import PopupWithForm from '../js/components/PopupWithForm.js'
 import { editButton, addButton, profilePopupNameInput, profilePopupAboutInput,
-  profilePopupButton, avatar, avatarWrapper, cardPopupButton, avatarPopupButton
+  profilePopupButton, avatarWrapper, cardPopupButton, avatarPopupButton
 } from '../js/utils/constants.js'
 import { validationSettings, validators } from '../js/utils/validationSettings.js'
 import UserInfo from '../js/components/UserInfo.js'
 import { createCardElement } from '../js/utils/utils.js'
 import './index.css'
+import DeletePopup from '../js/components/DeletePopup.js'
 
 // Api
 
@@ -45,14 +46,13 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
       api.changeUserInfo(profilePopup.returnInputValues())
         .then(res => {
           userInfoElement.setUserInfo(res)
+          profilePopupButton.textContent = 'Сохранить'
+          profilePopup.close()
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
           Ошибка: ${err}`)
-        })
-        .finally(() => {
-          profilePopupButton.textContent = 'Сохранить'
-          profilePopup.close()
+          profilePopupButton.textContent = `Ошибка: ${err.name}`
         })
 
     })
@@ -62,14 +62,13 @@ Promise.all([api.getUserInfo(), api.getInitialCards()])
       api.addCard(cardPopup.returnInputValues())
         .then(res => {
           cardsContainer.addItem(createCardElement(res, api, data[0]))
+          cardPopupButton.textContent = 'Создать'
+          cardPopup.close()
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
           Ошибка: ${err}`)
-        })
-        .finally(() => {
-          cardPopupButton.textContent = 'Создать'
-          cardPopup.close()
+          cardPopupButton.textContent = `Ошибка: ${err.name}`
         })
 
     })
@@ -96,19 +95,37 @@ const popupWithImage = new PopupWithImage('.popup_image'),
         avatarPopupButton.textContent = 'Сохранение...'
         api.changeAvatar(avatarPopup.returnInputValues())
           .then(data => {
-            avatar.src = data.avatar
+            userInfoElement.setUserInfo({name: data.name, about: data.about, avatar: data.avatar, id: data._id})
+            avatarPopup.close()
+            avatarPopupButton.textContent = 'Сохранить'
         })
           .catch(err => {
             console.log(`Что-то пошло не так...
             Ошибка: ${err}`)
+            avatarPopupButton.textContent = `Ошибка: ${err.name}`
           })
-          .finally(() => {
-            avatarPopupButton.textContent = 'Сохранить'
-            avatarPopup.close()
-          })
+      }),
+      deletePopup = new DeletePopup({
+        popupSelector: '.popup_delete',
+        submitCallback: (e) => {
+          e.preventDefault()
+          deletePopup.deleteButton.textContent = 'Удаление...'
+          api.deleteCard(deletePopup._id)
+            .then(() => {
+              deletePopup.deleteButton.textContent = 'Да'
+              deletePopup._elementToDelete.remove()
+              deletePopup.close()
+            })
+            .catch(err => {
+              console.log(`Что-то пошло не так...
+              Ошибка: ${err}`)
+              deletePopup.deleteButton.textContent = `Ошибка: ${err.name}`
+            })
+        }
       })
 popupWithImage.setEventListeners()
 avatarPopup.setEventListeners()
+deletePopup.setEventListeners()
 
 // Валидаторы
 
@@ -139,6 +156,6 @@ avatarWrapper.addEventListener('click', () => {
   validators['popupFormAvatar'].clearValidationErrors()
 })
 
-export { popupWithImage, api }
+export { popupWithImage, api, deletePopup }
 
 

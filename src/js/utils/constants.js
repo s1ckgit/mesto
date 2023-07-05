@@ -6,8 +6,7 @@ const editButton = document.querySelector('.profile__edit'),
       avatarPopupButton = document.querySelector('.popup__button_avatar'),
       profilePopupNameInput = profilePopup.querySelector('[name="name"]'),
       profilePopupAboutInput  = profilePopup.querySelector('[name="about"]'),
-      avatarWrapper = document.querySelector('.profile__avatar-wrapper'),
-      avatar = document.querySelector('.profile__avatar')
+      avatarWrapper = document.querySelector('.profile__avatar-wrapper')
 
-export { editButton, addButton, profilePopupNameInput, profilePopupAboutInput, avatarWrapper, avatar, profilePopupButton,
+export { editButton, addButton, profilePopupNameInput, profilePopupAboutInput, avatarWrapper, profilePopupButton,
   cardPopupButton, avatarPopupButton }

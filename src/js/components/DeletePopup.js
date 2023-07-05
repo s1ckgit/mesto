@@ -1,21 +1,24 @@
 import Popup from "./Popup";
 
 export default class DeletePopup extends Popup {
-  constructor({elementToDelete, id, removeApi, popupSelector}) {
+  constructor({elementToDelete, id, popupSelector, submitCallback}) {
     super(popupSelector)
     this._elementToDelete = elementToDelete
     this._id = id
-    this._removeApi = removeApi
-    this._deleteButton = this._popup.querySelector('.popup__button')
+    this._submitCallback = submitCallback.bind(this)
+    this.deleteButton = this._popup.querySelector('.popup__button')
   }
 
-  setEventListeners() {
-    super.setEventListeners()
+  open({elementToDelete, id}) {
     super.open()
-    this._deleteButton.addEventListener('click', () => {
-      this._removeApi(this._id)
-      this._elementToDelete.remove()
-      this._popup.classList.remove('popup_opened')
-    })
+    this._elementToDelete = elementToDelete
+    this._id = id
+
+    this.deleteButton.addEventListener('click', this._submitCallback)
+  }
+
+  close() {
+    super.close()
+    this.deleteButton.removeEventListener('click', this._submitCallback)
   }
 }
