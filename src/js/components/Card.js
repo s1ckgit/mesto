@@ -1,11 +1,10 @@
 export default class Card {
-  constructor({data, templateSelector, handleCardClick, removeApi, likeApi, currentUser, handleDelete}) {
+  constructor({data, templateSelector, handleCardClick, likeApi, currentUser, handleDelete}) {
     this._handleCardClick = handleCardClick
     this._title = data.name
     this._image = data.link
     this._id = data._id
     this._likes = data.likes
-    // this._removeApi = removeApi
     this._likeApi = likeApi
     this._handleDelete = handleDelete
     this._owner = data.owner._id
@@ -21,28 +20,28 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._element.querySelector('.element__like').addEventListener('click', (e) => {
-      this._handleLikeButton(e)
+    this._likeButton.addEventListener('click', () => {
+      this._handleLikeButton()
     })
 
     try {
-      this._element.querySelector('.element__delete').addEventListener('click', () => {
+      this._deleteButton.addEventListener('click', () => {
         this._handleDeleteButton()
       })
     } catch(e) {}
 
-    this._element.querySelector('.element__img').addEventListener('click', () => {
+    this._imageElement.addEventListener('click', () => {
       this._handleCardClick()
     })
   }
 
-  _handleLikeButton(e) {
+  _handleLikeButton() {
     if(!this._isLiked) {
       this._likeApi(this._id)
         .then(data => {
           this._likeCounterElement.textContent = data.likes.length
           this._isLiked = true
-          e.target.classList.toggle('element__like_active')
+          this._likeButton.classList.toggle('element__like_active')
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
@@ -53,7 +52,7 @@ export default class Card {
         .then(data => {
           this._isLiked = false
           this._likeCounterElement.textContent = data.likes.length
-          e.target.classList.toggle('element__like_active')
+          this._likeButton.classList.toggle('element__like_active')
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
@@ -69,18 +68,22 @@ export default class Card {
 
   generateCard() {
     this._element = this._getCardTemplate()
+    this._likeButton = this._element.querySelector('.element__like')
+    this._deleteButton = this._element.querySelector('.element__delete')
+    this._imageElement = this._element.querySelector('.element__img')
+    this._cardName = this._element.querySelector('.element__name')
     this._likeCounterElement = this._element.querySelector('.element__likes-counter')
 
     if(this._currentUser._id != this._owner) {
-      this._element.querySelector('.element__delete').remove()
+      this._deleteButton.remove()
     }
     if(this._isLiked) {
-      this._element.querySelector('.element__like').classList.add('element__like_active')
+      this._likeButton.classList.add('element__like_active')
     }
 
-    this._element.querySelector('.element__img').src = this._image
-    this._element.querySelector('.element__img').alt = this._title
-    this._element.querySelector('.element__name').textContent = this._title
+    this._imageElement.src = this._image
+    this._imageElement.alt = this._title
+    this._cardName.textContent = this._title
     this._likeCounterElement.textContent = this._likes.length
 
     this._setEventListeners()

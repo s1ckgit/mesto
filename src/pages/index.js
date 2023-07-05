@@ -4,14 +4,32 @@ import FormValidator from '../js/components/FormValidator.js'
 import Section from '../js/components/Section.js'
 import PopupWithImage from '../js/components/PopupWIthImage.js'
 import PopupWithForm from '../js/components/PopupWithForm.js'
-import { editButton, addButton, profilePopupNameInput, profilePopupAboutInput,
-  profilePopupButton, avatarWrapper, cardPopupButton, avatarPopupButton
-} from '../js/utils/constants.js'
+import { editButton, addButton, avatarWrapper } from '../js/utils/constants.js'
 import { validationSettings, validators } from '../js/utils/validationSettings.js'
 import UserInfo from '../js/components/UserInfo.js'
-import { createCardElement } from '../js/utils/utils.js'
+import Card from '../js/components/Card.js'
 import './index.css'
 import DeletePopup from '../js/components/DeletePopup.js'
+
+// Благодарю за отличное ревью. Хорошего дня :)
+
+// Декларация функции создания карточки
+
+function createCardElement(data, api, user) {
+  return new Card({
+    data: data,
+    templateSelector: '#element-template',
+    handleCardClick: () => {
+      popupWithImage.open({link: data.link, name: data.name})
+    },
+    removeApi: api.deleteCard,
+    likeApi: api.likeCard,
+    currentUser: user,
+    handleDelete: ({elementToDelete, id}) => {
+        deletePopup.open({elementToDelete: elementToDelete, id: id})
+    }
+    }).generateCard()
+}
 
 // Api
 
@@ -26,49 +44,49 @@ const api = new Api({
 // Promises
 
 Promise.all([api.getUserInfo(), api.getInitialCards()])
-  .then(data => {
+  .then(([userData, cards]) => {
     // Рендер карточек
     const cardsContainer = new Section({
-      items: data[1].reverse(),
+      items: cards.reverse(),
       renderer: (item) => {
-        return createCardElement(item, api, data[0])
+        return createCardElement(item, api, userData)
       }
     }, '.elements')
     cardsContainer.renderAll()
 
     // Загрузка данных пользователя
-    userInfoElement.setUserInfo(data[0])
+    userInfoElement.setUserInfo(userData)
 
     // Создание попапов
     profilePopup = new PopupWithForm('.popup_profile', (e) => {
       e.preventDefault()
-      profilePopupButton.textContent = 'Сохранение...'
+      profilePopup.renderLoading(false, true)
       api.changeUserInfo(profilePopup.returnInputValues())
         .then(res => {
           userInfoElement.setUserInfo(res)
-          profilePopupButton.textContent = 'Сохранить'
+          profilePopup.renderLoading(false, false)
           profilePopup.close()
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
           Ошибка: ${err}`)
-          profilePopupButton.textContent = `Ошибка: ${err.name}`
+          profilePopup.renderLoading(true, false)
         })
 
     })
     cardPopup = new PopupWithForm('.popup_card', (e) => {
       e.preventDefault()
-      cardPopupButton.textContent = 'Сохранение...'
+      cardPopup.renderLoading(false, true)
       api.addCard(cardPopup.returnInputValues())
         .then(res => {
-          cardsContainer.addItem(createCardElement(res, api, data[0]))
-          cardPopupButton.textContent = 'Создать'
+          cardsContainer.addItem(createCardElement(res, api, userData))
+          cardPopup.renderLoading(false, false)
           cardPopup.close()
         })
         .catch(err => {
           console.log(`Что-то пошло не так...
           Ошибка: ${err}`)
-          cardPopupButton.textContent = `Ошибка: ${err.name}`
+          cardPopup.renderLoading(true, false)
         })
 
     })
@@ -92,34 +110,34 @@ let profilePopup, cardPopup
 const popupWithImage = new PopupWithImage('.popup_image'),
       avatarPopup = new PopupWithForm('.popup_avatar', (e) => {
         e.preventDefault()
-        avatarPopupButton.textContent = 'Сохранение...'
+        avatarPopup.renderLoading(false, true)
         api.changeAvatar(avatarPopup.returnInputValues())
           .then(data => {
             userInfoElement.setUserInfo({name: data.name, about: data.about, avatar: data.avatar, id: data._id})
             avatarPopup.close()
-            avatarPopupButton.textContent = 'Сохранить'
+            avatarPopup.renderLoading(false, false)
         })
           .catch(err => {
             console.log(`Что-то пошло не так...
             Ошибка: ${err}`)
-            avatarPopupButton.textContent = `Ошибка: ${err.name}`
+            avatarPopup.renderLoading(true, false)
           })
       }),
       deletePopup = new DeletePopup({
         popupSelector: '.popup_delete',
         submitCallback: (e) => {
           e.preventDefault()
-          deletePopup.deleteButton.textContent = 'Удаление...'
+          deletePopup.renderLoading(false, true)
           api.deleteCard(deletePopup._id)
             .then(() => {
-              deletePopup.deleteButton.textContent = 'Да'
-              deletePopup._elementToDelete.remove()
+              deletePopup.renderLoading(false, false)
+              deletePopup.elementToDelete.remove()
               deletePopup.close()
             })
             .catch(err => {
               console.log(`Что-то пошло не так...
               Ошибка: ${err}`)
-              deletePopup.deleteButton.textContent = `Ошибка: ${err.name}`
+              deletePopup.renderLoading(true, false)
             })
         }
       })
@@ -139,9 +157,7 @@ Array.from(document.querySelectorAll(validationSettings.formSelector)).forEach(f
 
 editButton.addEventListener('click', () => {
   profilePopup.open()
-  const {name, about} = userInfoElement.getUserInfo()
-  profilePopupNameInput.value = name
-  profilePopupAboutInput.value = about
+  profilePopup.setInputValues(userInfoElement.getUserInfo())
   validators['popupFormProfile'].toggleButtonState()
   validators['popupFormProfile'].clearValidationErrors()
 })
